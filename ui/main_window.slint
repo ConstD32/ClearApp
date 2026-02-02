@@ -1,0 +1,154 @@
+import {
+    Button,
+    VerticalBox,
+    HorizontalBox,
+    GroupBox,
+    LineEdit,
+    TextEdit,
+} from "std-widgets.slint";
+
+export struct TunnelInfo {
+    name: string,
+    local_port: int,
+    remote_port: int,
+    status: string,
+    status_color: string,
+    start_enabled: bool,
+    stop_enabled: bool,
+}
+
+export component MainWindow inherits Window {
+    in-out property <string> password: "";
+    in-out property <[TunnelInfo]> tunnels: [];
+    in-out property <string> log_text: "";
+
+    callback start_tunnel(string);
+    callback stop_tunnel(string);
+    callback quit_app();
+
+    width: 600px;
+    height: 800px;
+    title: "SSH Tunnel Manager";
+
+    VerticalBox {
+        padding: 10px;
+        spacing: 10px;
+
+        // Заголовок
+        Text {
+            text: "--- SSH Tunnel Manager ---";
+            font-size: 20px;
+            font-weight: 700;
+            horizontal-alignment: TextHorizontalAlignment.center;
+            vertical-alignment: top;
+        }
+
+        // Пароль
+        GroupBox {
+            height: 80px;
+            title: "Пароль к ключу:";
+            HorizontalBox {
+                padding: 10px;
+
+                LineEdit {
+                    placeholder-text: "Введите пароль от приватного ключа";
+                    text: root.password;
+                    input-type: InputType.password;
+//                    width: 100%;
+                }
+            }
+        }
+
+        // Список туннелей
+        GroupBox {
+            title: "Туннели:";
+            VerticalBox {
+                padding: 5px;
+                spacing: 10px;
+
+                for tunnel[i] in root.tunnels: GroupBox {
+                    title: tunnel.name;
+                    HorizontalBox {
+                        spacing: 10px;
+                        padding: 5px;
+
+                        // Статус
+                        Text {
+                            width: 150px;
+                            text: tunnel.status;
+//                            color: brush { tunnel.status_color };
+                            font-weight: 600;
+                            font-size: 14px;
+                        }
+
+                        // Порты
+                        HorizontalBox {
+                            spacing: 5px;
+                            Text {
+                                text: "127.0.0.1:" + tunnel.local_port;
+                                font-weight: 500;
+                            }
+
+                            Text {
+                                text: "→";
+                            }
+
+                            Text {
+                                text: "localhost:" + tunnel.remote_port;
+                                font-weight: 500;
+                            }
+                        }
+
+                        HorizontalBox { }
+
+                        // Кнопки управления
+                        Button {
+                            min-width: 100px;
+                            text: "Запустить";
+                            enabled: tunnel.start_enabled;
+                            clicked => {
+                                root.start_tunnel(tunnel.name);
+                            }
+                        }
+
+                        Button {
+                            min-width: 100px;
+                            text: "Остановить";
+                            enabled: tunnel.stop_enabled;
+                            clicked => {
+                                root.stop_tunnel(tunnel.name);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Лог
+        GroupBox {
+            title: "Лог:";
+            preferred-height: 250px;
+            VerticalBox {
+                TextEdit {
+                    text: root.log_text;
+                    read-only: true;
+                    wrap: word-wrap;
+//                    font-family: "monospace";
+                    font-size: 12px;
+                }
+            }
+        }
+
+        // Кнопка выхода
+        HorizontalBox {
+            alignment: end;
+            Button {
+                text: "Выход";
+                min-width: 100px;
+                clicked => {
+                    root.quit_app();
+                }
+            }
+        }
+    }
+}

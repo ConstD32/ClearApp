@@ -1,0 +1,102 @@
+import { Button, TextEdit } from "std-widgets.slint";
+
+export component MainWindow inherits Window {
+    in-out property <[SshConfig]> rows;
+    in-out property <int> selected_row: -1;
+
+    // ширины колонок
+    in-out property <length> col_name: 140px;
+    in-out property <length> col_host: 200px;
+    in-out property <length> col_port: 70px;
+    in-out property <length> col_user: 120px;
+
+    width: 800px;
+    height: 500px;
+    title: "SSH Configurations";
+
+    VerticalLayout {
+        spacing: 6px;
+        padding: 8px;
+
+        // ===== HEADER =====
+//        HorizontalLayout {
+//            header_cell("Name", col_name);
+//            header_cell("Host", col_host);
+//            header_cell("Port", col_port);
+//            header_cell("User", col_user);
+//        }
+
+        // ===== TABLE =====
+        TableView {
+            for (i, row) in rows: TableRow {
+                background: i == selected_row ? #e8f0ff : transparent;
+
+                cell_text(i, row.name, col_name, (v) => {
+                    rows.set_row_data(i, {
+                        name: v,
+                        host: row.host,
+                        port: row.port,
+                        user: row.user
+                    });
+                });
+
+                cell_text(i, row.host, col_host, (v) => {
+                    rows.set_row_data(i, {
+                        name: row.name,
+                        host: v,
+                        port: row.port,
+                        user: row.user
+                    });
+                });
+
+                cell_port(i, row.port, col_port, (v) => {
+                    rows.set_row_data(i, {
+                        name: row.name,
+                        host: row.host,
+                        port: v,
+                        user: row.user
+                    });
+                });
+
+                cell_text(i, row.user, col_user, (v) => {
+                    rows.set_row_data(i, {
+                        name: row.name,
+                        host: row.host,
+                        port: row.port,
+                        user: v
+                    });
+                });
+
+                TouchArea {
+                    clicked => selected_row = i;
+                }
+            }
+        }
+
+        // ===== FOOTER =====
+        HorizontalLayout {
+            spacing: 8px;
+
+            Button {
+                text: "Add";
+                clicked => {
+                    rows.push({
+                        name: "New",
+                        host: "localhost",
+                        port: 22,
+                        user: "user"
+                    });
+                }
+            }
+
+            Button {
+                text: "Remove";
+                enabled: selected_row >= 0;
+                clicked => {
+                    rows.remove(selected_row);
+                    selected_row = -1;
+                }
+            }
+        }
+    }
+}

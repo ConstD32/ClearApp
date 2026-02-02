@@ -1,0 +1,407 @@
+# rustfmt.toml - Полная конфигурация Rustfmt
+# Версия конфига: Rustfmt 1.6.0+
+
+# ============================================
+# БАЗОВЫЕ НАСТРОЙКИ
+# ============================================
+
+# Редакция Rust (влияет на некоторые правила)
+edition = "2024"  # "2015", "2018", "2021"
+
+# Использовать нестабильные возможности rustfmt
+#unstable_features = false  # true - включить экспериментальные фичи
+
+# Версия форматирования
+#version = "Two"  # "One", "Two" (формат конфига)
+
+# ============================================
+# ОТСТУПЫ И ПРОБЕЛЫ
+# ============================================
+
+# Количество пробелов на один отступ
+tab_spaces = 4 # 2, 4, 8
+
+# Использовать табы вместо пробелов
+hard_tabs = false  # true - использовать '\t'
+
+# Стиль отступов
+#indent_style = "Block"  # "Block", "Visual"
+
+# Размер отступа для продолжения строк
+#continuation_indent = 4
+
+# Размер отступа для объявлений where
+#where_indent = "Normal"  # "Normal", "Block", "DiffAndBlock"
+
+# Отступ для веток match
+#match_arm_leading_pipes = "Never"  # "Never", "Always", "Preserve"
+
+# ============================================
+# ШИРИНА И ПЕРЕНОС СТРОК
+# ============================================
+
+# Максимальная ширина строки
+max_width = 120 # 80-120 рекомендуется
+
+# Ширина комментариев (если отличается от max_width)
+#comment_width = 80
+
+# Ширина цепочек методов/вызовов
+chain_width = 120
+
+# Максимальная глубина вложенности
+#max_depth = 10
+
+# Перенос простых блоков if-else
+#condense_wildcard_suffixes = true
+
+# ============================================
+# КОММЕНТАРИИ
+# ============================================
+
+# Переносить длинные комментарии
+wrap_comments = true
+
+# Форматировать код в документационных комментариях
+format_code_in_doc_comment = true
+
+# Удалять конечные пробелы в комментариях
+#normalize_doc_attributes = false
+
+# ============================================
+# ИМПОРТЫ (use statements)
+# ============================================
+
+# Группировать импорты
+group_imports = "StdExternalCrate"  # "Preserve", "StdExternalCrate", "Module"
+
+# Гранулярность импортов
+#imports_granularity = "Crate"  # "Crate", "Module", "Item"
+
+# Максимальная длина модуля в импорте
+#imports_layout = "Vertical"  # "Horizontal", "Vertical", "Mixed"
+
+# Сортировать импорты по алфавиту
+reorder_imports = true
+
+# Сортировать модули
+#reorder_modules = true
+
+# Максимальная длина одного импорта в строке
+#use_field_alignment = true
+
+# ============================================
+# СКОБКИ И ОФОРМЛЕНИЕ
+# ============================================
+
+# Стиль фигурных скобок
+brace_style = "SameLineWhere"  # "AlwaysSameLine", "SameLineWhere", "PreferSameLine"
+
+# Размещение where на одной строке
+#where_single_line = false
+
+# Размещение else на отдельной строке
+#else_trailing_comma = false
+
+# Форматирование блоков where
+#where_layout = "Tall"  # "Tall", "Wide"
+
+# Размещение generic параметров
+#generics_indent = "Normal"
+
+# Размещение замыканий
+#closure_block_indent = "Block"
+
+# ============================================
+# РАЗДЕЛИТЕЛИ И ЗАПЯТЫЕ
+# ============================================
+
+# Размещение разделителя в многострочных выражениях
+#binop_separator = "Front"  # "Front", "Back"
+
+# Трейлинговая запятая в массивах
+trailing_comma = "Always"  # "Never", "Always", "Vertical"
+
+# Трейлинговая запятая в match
+match_arm_trailing_comma = true
+
+# Запятая в вызовах функций
+#trailing_comma_in = "Always"  # "Never", "Always"
+
+# Максимальная длина перед переносом
+#overflow_delimited_expr = false
+
+# Запятые в структурах
+#struct_trailing_comma = "Vertical"  # ✅ РАБОТАЕТ
+
+# Запятые в перечислениях
+#enum_trailing_comma = "Vertical"    # ✅ РАБОТАЕТ
+
+# ============================================
+# ПРОБЕЛЫ И ПУСТЫЕ СТРОКИ
+# ============================================
+
+# Стиль переноса строк
+#newline_style = "Auto"  # "Native", "Unix", "Windows", "Auto"
+
+# Пустые строки между элементами
+#blank_lines_lower_bound = 1
+#blank_lines_upper_bound = 1
+
+# Пустые строки в начале/конце блоков
+#blank_lines_inside_block = false
+
+# Сжимать несколько пустых строк
+#collapse_empty_blocks = true
+
+# Удалять пробелы в угловых скобках
+#remove_nested_parens = true
+
+# Пробелы вокруг операторов
+#space_before_colon = false
+#space_after_colon = true
+
+# Пробелы в объявлениях типов
+#space_before_type_colon = false
+#space_after_type_colon = true
+
+# Пробел перед открывающей скобкой вызова функции
+#space_before_fn_call_parens = false
+
+# ============================================
+# МАКРОСЫ
+# ============================================
+
+# Форматировать тела макросов
+#format_macro_bodies = true
+
+# Форматировать matchers в макросах
+#format_macro_matchers = true
+
+# Максимальная длина макроса в строке
+#macro_use_block = true
+
+# Форматирование вызовов макросов
+#use_macro_heuristics = true
+
+# ============================================
+# ЧИСЛА И ЛИТЕРАЛЫ
+# ============================================
+
+# Форматирование float литералов
+#decimal_floats = true  # Всегда добавлять .0
+
+# Группировка цифр в числах
+#group_digits = "Auto"  # "Auto", "Never", "Decimal", "All"
+
+# Форматирование hex литералов
+#format_strings = true
+
+# Двоичные/восьмеричные литералы
+#format_binop_lhs = true
+
+# ============================================
+# АТРИБУТЫ
+# ============================================
+
+# Форматировать атрибуты
+#format_attributes = true
+
+# Сохранять порядок атрибутов
+#attr_ordering = "Preserve"
+
+# Отступ для атрибутов
+#attr_indent = "Normal"
+
+# ============================================
+# СТРУКТУРЫ И ПЕРЕЧИСЛЕНИЯ
+# ============================================
+
+# Выравнивание полей структур
+#struct_field_align_threshold = 0  # 0 = не выравнивать
+
+# Стиль объявления enum
+#enum_discrim_align_threshold = 0
+
+# Трейлинговая запятая в структурах
+#struct_trailing_comma = "Vertical"
+
+# Выравнивание значений в enum
+#enum_trailing_comma = "Vertical"
+
+# ============================================
+# ТЕСТЫ (специальные настройки для тестов)
+# ============================================
+
+# Для файлов в tests/ можно задать отдельные настройки
+#[test]
+#max_width = 120
+#wrap_comments = false
+
+# Для benchmarks
+#[bench]
+#max_width = 120
+
+# Для примеров
+#[example]
+#max_width = 100
+
+# ============================================
+# ИГНОРИРОВАНИЕ
+# ============================================
+
+# Игнорировать файлы/паттерны
+#ignore = [
+#  # "src/legacy/",           # игнорировать директорию
+#  # "**/generated/*.rs",     # игнорировать по маске
+#  # "build.rs",              # игнорировать конкретный файл
+#]
+
+# Файлы которые нужно исключить
+#exclude_files = []
+
+# ============================================
+# ПРОДВИНУТЫЕ НАСТРОЙКИ
+# ============================================
+
+# Форсировать многострочные блоки
+#force_multiline_blocks = false
+
+# Сохранять форматирование строковых литералов
+#format_strings = true
+
+# Пробел после унарного оператора
+#space_after_unary_op = false
+
+# Форматирование диапазонов
+#format_range_exact = true
+
+# Обработка unsafe блоков
+#format_unsafe = true
+
+# Выравнивание where предикатов
+#where_pred_indent = "Normal"
+
+# Отступ для generic параметров
+#generics_indent = "Normal"
+
+# ============================================
+# СПЕЦИФИЧНЫЕ ДЛЯ ТИПОВ
+# ============================================
+
+# Форматирование impl блоков
+#impl_block_style = "Visual"
+
+# Выравнивание where в impl
+#impl_indent = "Normal"
+
+# Отступ для параметров функций
+#fn_params_indent = "Normal"
+
+# Выравнивание аргументов функций
+#fn_args_layout = "Tall"
+
+# ============================================
+# ЦЕПОЧКИ ВЫЗОВОВ
+# ============================================
+
+# Перенос цепочек методов
+#chain_indent = "Block"
+
+# Размещение точки в цепочках
+#dot_chain_style = "SameLine"
+
+# Максимальная длина перед переносом цепочки
+#chain_split_length = 4
+
+# ============================================
+# КОНФИГУРАЦИЯ ДЛЯ ОПРЕДЕЛЕННЫХ ПУТЕЙ
+# ============================================
+
+# Можно переопределить настройки для конкретных путей
+#[files]
+#"src/main.rs" = { max_width = 80 }
+#"src/lib.rs" = { imports_granularity = "Module" }
+#"tests/**/*.rs" = { max_width = 120, wrap_comments = false }
+
+# Включить использование подчеркиваний в числовых литералах
+use_small_heuristics = "Max"  # или "Default", "Off"
+
+# Дополнительные настройки для чисел
+format_number_literals = true
+number_literal_grouping = "Always"  # "Always", "Never", "Auto"
+number_literal_group_size = 3
+
+# ============================================
+# УСТАРЕВШИЕ/ЭКСПЕРИМЕНТАЛЬНЫЕ ПАРАМЕТРЫ
+# ============================================
+
+# report_todo = "Never"        # Устарел
+# report_fixme = "Never"       # Устарел
+# skip_children = false        # Устарел
+
+# error_on_line_overflow = false  # Экспериментальный
+# error_on_unformatted = false    # Экспериментальный
+
+# ============================================
+# МЕТАДАННЫЕ
+# ============================================
+
+# Минимальная версия rustfmt
+#required_version = "1.6.0"
+
+# Автор конфигурации
+#[metadata]
+#author = "Your Name"
+#created = "2024"
+#description = "Полная конфигурация Rustfmt для проекта"
+
+# ---------------------------------------------------------------------------------
+
+# Минимальная рабочая конфигурация (для начала):
+
+# Минимальный rustfmt.toml
+#edition = "2021"
+#tab_spaces = 4
+#max_width = 100
+#hard_tabs = false
+#imports_granularity = "Crate"
+#wrap_comments = true
+#brace_style = "SameLineWhere"
+
+# Конфигурация для команды (рекомендуемая):
+
+# Командный стандарт
+#edition = "2021"
+#tab_spaces = 4
+#max_width = 100
+#hard_tabs = false
+
+# Импорты
+#imports_granularity = "Crate"
+#group_imports = "StdExternalCrate"
+#reorder_imports = true
+
+# Читаемость
+#wrap_comments = true
+#comment_width = 80
+#brace_style = "SameLineWhere"
+
+# Согласованность
+#trailing_comma = "Vertical"
+#match_arm_trailing_comma = true
+#where_single_line = false
+
+# Игнорируем сгенерированный код
+#ignore = ["target/", "**/generated/*.rs"]
+
+# Конфигурация с табами в 2 пробела:
+
+# Для проектов с 2 пробелами
+#edition = "2021"
+#tab_spaces = 2
+#max_width = 100
+#hard_tabs = false
+#imports_granularity = "Crate"
+#brace_style = "SameLineWhere"
+#continuation_indent = 2

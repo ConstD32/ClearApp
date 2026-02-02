@@ -1,0 +1,254 @@
+// app.slint
+import {
+    VerticalBox,
+    HorizontalBox,
+    Button,
+    GroupBox,
+    LineEdit,
+    StandardButton,
+} from "std-widgets.slint";
+
+// Определяем структуру для туннеля
+export struct TunnelData {
+    name: string,
+    local_port: int,
+    remote_port: int,
+    running: bool,
+}
+
+export component MainWindow inherits Window {
+    in-out property <string> password: "";
+
+    // Конфигурация сервера
+    in-out property <string> server-ip;
+    in-out property <string> username;
+    in-out property <string> key-path;
+
+    // Конфигурация туннелей
+    in-out property <[TunnelData]> tunnels;
+
+    // Callbacks для взаимодействия с Rust
+    callback start_tunnel(int);
+    callback stop_tunnel(int);
+    callback reload_config();
+    callback save_config();
+
+    // Свойства для отображения
+    private property <int> total_tunnels: root.tunnels.length;
+    in property <int> running_tunnels;
+
+    title: "SSH Tunnel Manager";
+    default-font-size: 12px;
+    min-height: 800px;
+    min-width: 600px;
+
+    VerticalBox {
+        padding: 15px;
+        spacing: 15px;
+        alignment: LayoutAlignment.start;
+
+        // Секция конфигурации сервера
+        GroupBox {
+            title: "Конфигурация сервера";
+            VerticalBox {
+                spacing: 10px;
+
+                HorizontalBox {
+                    spacing: 5px;
+                    Text {
+                        width: 100px;
+                        text: "Server IP:";
+                        vertical-alignment: center;
+                    }
+                    LineEdit {
+                        width: 200px;
+                        text: root.server-ip;
+                        placeholder-text: "адрес сервера";
+                    }
+                }
+
+                HorizontalBox {
+                    spacing: 5px;
+                    Text {
+                        width: 100px;
+                        text: "Username:";
+                        vertical-alignment: center;
+                    }
+                    LineEdit {
+                        width: 200px;
+                        text: root.username;
+                        placeholder-text: "имя пользователя";
+                    }
+                }
+
+                HorizontalBox {
+                    spacing: 5px;
+                    Text {
+                        width: 100px;
+                        text: "Key Path:";
+                        vertical-alignment: center;
+                    }
+                    LineEdit {
+                        width: 300px;
+                        text: root.key-path;
+                        placeholder-text: "путь к приватному ключу";
+                    }
+                }
+            }
+        }
+
+        HorizontalBox {
+            spacing: 5px;
+            Text {
+                color: #000000;
+                font-size: 14pt;
+                text: "Введите пароль:";
+                vertical-alignment: center;
+                horizontal-alignment: left;
+            }
+
+            LineEdit {
+                width: 250px;
+                placeholder-text: "Введите пароль от приватного ключа";
+                text: root.password;
+                input-type: InputType.password;
+                font-size: 14pt;
+            }
+        }
+
+        Rectangle { // Разделитель
+            border-color: #2479f4;
+            border-width: 2px;
+            height: 2px;
+        }
+
+        // Секция Туннелей
+        GroupBox {
+            title: "Туннели";
+
+            VerticalBox {
+                spacing: 10px;
+
+                // Заголовок таблицы
+                HorizontalBox {
+                    height: 30px;
+                    Rectangle { background: #e0e0e0; width: 150px;
+                        Text { text: "Название"; font-weight: bold; }
+                    }
+                    Rectangle { background: #e0e0e0; width: 100px;
+                        Text { text: "Локальный порт"; font-weight: bold; }
+                    }
+                    Rectangle { background: #e0e0e0; width: 100px;
+                        Text { text: "Удаленный порт"; font-weight: bold; }
+                    }
+                    Rectangle { background: #e0e0e0; width: 80px;
+                        Text { text: "Статус"; font-weight: bold; }
+                    }
+                    Rectangle { background: #e0e0e0; width: 80px;
+                        Text { text: "Действия"; font-weight: bold; }
+                    }
+                }
+
+                // Список туннелей
+                for tunnel[i] in root.tunnels : HorizontalBox {
+                    height: 40px;
+                    vertical-alignment: center;
+
+                    Rectangle {
+                        width: 150px;
+                        Text {
+                            text: tunnel.name;
+                            vertical-alignment: center;
+                        }
+                    }
+
+                    Rectangle {
+                        width: 100px;
+                        Text {
+                            text: tunnel.local_port;
+                            vertical-alignment: center;
+                        }
+                    }
+
+                    Rectangle {
+                        width: 100px;
+                        Text {
+                            text: tunnel.remote_port;
+                            vertical-alignment: center;
+                        }
+                    }
+
+                    Rectangle {
+                        width: 80px;
+                        Text {
+                            text: if tunnel.running {"Запущен"} else {"Остановлен"};
+                            color: if tunnel.running {#00aa00} else {#aa0000};
+                            vertical-alignment: center;
+                        }
+                    }
+
+                    Rectangle {
+                        width: 80px;
+                        HorizontalBox {
+                            spacing: 5px;
+                            Button {
+                                width: 35px;
+                                text: if tunnel.running {"⏹"} else {"▶"};
+                                clicked => {
+                                    if tunnel.running {
+                                        root.stop_tunnel(i);
+                                    } else {
+                                        root.start_tunnel(i);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        Rectangle { // Разделитель
+            border-color: #2479f4;
+            border-width: 2px;
+            height: 2px;
+        }
+
+        // Панель управления
+        HorizontalBox {
+            spacing: 10px;
+
+            StandardButton {
+                text: "Сохранить конфигурацию";
+                clicked => {
+                    root.save_config();
+                }
+            }
+
+            StandardButton {
+                text: "Обновить конфигурацию";
+                clicked => {
+                    root.reload_config();
+                }
+            }
+
+            Rectangle { width: 20px; } // Отступ
+
+            StandardButton {
+                kind: close;
+                text: "Выход";
+            }
+        }
+
+        // Статистика
+        HorizontalBox {
+            spacing: 20px;
+            Text {
+                text: "Всего туннелей: " + root.total_tunnels;
+            }
+            Text {
+                text: "Активных: " + root.running_tunnels;
+            }
+        }
+    }
+}
