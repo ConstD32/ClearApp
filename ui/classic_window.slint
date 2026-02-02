@@ -1,0 +1,733 @@
+import {
+//    Button,
+//    CheckBox,
+//    ComboBox,
+//    GroupBox,
+    HorizontalBox,
+//    LineEdit,
+//    ListView,
+//    ScrollView,
+//    Slider,
+//    SpinBox,
+//    TabWidget,
+//    TextEdit,
+//    VerticalBox,
+} from "std-widgets.slint";
+
+export component ClassicWindow {
+    // Свойства приложения
+//    in property <string> window-title <=> title.text;
+    in property <bool> dark-mode;
+
+    // Callbacks для меню
+//    callback file-new();
+//    callback file-open();
+//    callback file-save();
+//    callback file-save-as();
+//    callback file-exit();
+
+//    callback edit-undo();
+//    callback edit-redo();
+//    callback edit-cut();
+//    callback edit-copy();
+//    callback edit-paste();
+//    callback edit-select-all();
+
+//    callback view-dark-mode(bool);
+//    callback view-toolbar(bool);
+//    callback view-statusbar(bool);
+
+//    callback help-about();
+//    callback help-documentation();
+
+    // Свойства для состояния меню
+//    private property <bool> can-undo: true;
+//    private property <bool> can-redo: false;
+//    private property <bool> has-selection: true;
+
+    Window {
+        title: "Classic Application Window";
+        icon: @image-url("../src/ssh_icon.ico");
+        width: 800px;
+        height: 600px;
+        background: dark-mode ? #2b2b2b : #f0f0f0;
+
+        // Главный вертикальный контейнер
+//        VerticalBox {
+//            // ========== МЕНЮ БАР ==========
+//            Rectangle {
+//                height: 30px;
+//                background: dark-mode ? #3c3c3c : #e0e0e0;
+//
+//                HorizontalBox {
+//                    spacing: 0;
+//
+//                    // Меню Файл
+//                    Rectangle {
+//                        width: 60px;
+//                        height: 100%;
+//                        background: hover ? (dark-mode ? #505050 : #d0d0d0) : transparent;
+//
+//                        Text {
+//                            text: "Файл";
+//                            horizontal-alignment: center;
+//                            vertical-alignment: center;
+//                            color: dark-mode ? white : black;
+//                        }
+//
+//                        clicked => {
+//                            file-menu.visible = !file-menu.visible;
+//                            edit-menu.visible = false;
+//                            view-menu.visible = false;
+//                            help-menu.visible = false;
+//                        }
+//                    }
+//
+//                    // Меню Правка
+//                    Rectangle {
+//                        width: 70px;
+//                        height: 100%;
+//                        background: hover ? (dark-mode ? #505050 : #d0d0d0) : transparent;
+//
+//                        Text {
+//                            text: "Правка";
+//                            horizontal-alignment: center;
+//                            vertical-alignment: center;
+//                            color: dark-mode ? white : black;
+//                        }
+//
+//                        clicked => {
+//                            edit-menu.visible = !edit-menu.visible;
+//                            file-menu.visible = false;
+//                            view-menu.visible = false;
+//                            help-menu.visible = false;
+//                        }
+//                    }
+//
+//                    // Меню Вид
+//                    Rectangle {
+//                        width: 60px;
+//                        height: 100%;
+//                        background: hover ? (dark-mode ? #505050 : #d0d0d0) : transparent;
+//
+//                        Text {
+//                            text: "Вид";
+//                            horizontal-alignment: center;
+//                            vertical-alignment: center;
+//                            color: dark-mode ? white : black;
+//                        }
+//
+//                        clicked => {
+//                            view-menu.visible = !view-menu.visible;
+//                            file-menu.visible = false;
+//                            edit-menu.visible = false;
+//                            help-menu.visible = false;
+//                        }
+//                    }
+//
+//                    // Меню Справка
+//                    Rectangle {
+//                        width: 80px;
+//                        height: 100%;
+//                        background: hover ? (dark-mode ? #505050 : #d0d0d0) : transparent;
+//
+//                        Text {
+//                            text: "Справка";
+//                            horizontal-alignment: center;
+//                            vertical-alignment: center;
+//                            color: dark-mode ? white : black;
+//                        }
+//
+//                        clicked => {
+//                            help-menu.visible = !help-menu.visible;
+//                            file-menu.visible = false;
+//                            edit-menu.visible = false;
+//                            view-menu.visible = false;
+//                        }
+//                    }
+//                }
+//            }
+//
+//            // ========== ПАНЕЛЬ ИНСТРУМЕНТОВ ==========
+//            Rectangle {
+//                height: 40px;
+//                background: dark-mode ? #404040 : #e8e8e8;
+//                visible: toolbar-visible;
+//
+//                HorizontalBox {
+//                    padding: 5px;
+//                    spacing: 5px;
+//
+//                    Button {
+//                        text: "📄";
+//                        tooltip: "Создать новый файл";
+//                        width: 30px;
+//                        clicked => {
+//                            file-new();
+//                        }
+//                    }
+//
+//                    Button {
+//                        text: "📂";
+//                        tooltip: "Открыть файл";
+//                        width: 30px;
+//                        clicked => {
+//                            file-open();
+//                        }
+//                    }
+//
+//                    Button {
+//                        text: "💾";
+//                        tooltip: "Сохранить";
+//                        width: 30px;
+//                        clicked => {
+//                            file-save();
+//                        }
+//                    }
+//
+//                    Rectangle {
+//                        width: 1px;
+//                        height: 100%;
+//                        background: dark-mode ? #505050 : #c0c0c0;
+//                    }
+//
+//                    Button {
+//                        text: "↶";
+//                        tooltip: "Отменить";
+//                        width: 30px;
+//                        enabled: can-undo;
+//                        clicked => {
+//                            edit-undo();
+//                        }
+//                    }
+//
+//                    Button {
+//                        text: "↷";
+//                        tooltip: "Повторить";
+//                        width: 30px;
+//                        enabled: can-redo;
+//                        clicked => {
+//                            edit-redo();
+//                        }
+//                    }
+//
+//                    Rectangle {
+//                        width: 1px;
+//                        height: 100%;
+//                        background: dark-mode ? #505050 : #c0c0c0;
+//                    }
+//
+//                    Button {
+//                        text: "✂";
+//                        tooltip: "Вырезать";
+//                        width: 30px;
+//                        enabled: has-selection;
+//                        clicked => {
+//                            edit-cut();
+//                        }
+//                    }
+//
+//                    Button {
+//                        text: "📋";
+//                        tooltip: "Копировать";
+//                        width: 30px;
+//                        enabled: has-selection;
+//                        clicked => {
+//                            edit-copy();
+//                        }
+//                    }
+//
+//                    Button {
+//                        text: "📝";
+//                        tooltip: "Вставить";
+//                        width: 30px;
+//                        clicked => {
+//                            edit-paste();
+//                        }
+//                    }
+//
+//                    Rectangle {
+//                        width: 1px;
+//                        height: 100%;
+//                        background: dark-mode ? #505050 : #c0c0c0;
+//                    }
+//
+//                    // Поиск
+//                    HorizontalBox {
+//                        spacing: 2px;
+//
+//                        LineEdit {
+//                            placeholder-text: "Поиск...";
+//                            width: 150px;
+//                        }
+//
+//                        Button {
+//                            text: "🔍";
+//                            width: 30px;
+//                        }
+//                    }
+//                }
+//            }
+//
+//            // ========== ОСНОВНАЯ ОБЛАСТЬ ==========
+//            HorizontalBox {
+//                // Боковая панель
+//                Rectangle {
+//                    width: 200px;
+//                    background: dark-mode ? #333333 : #f8f8f8;
+//                    border-right: 1px
+////                    solid(dark-mode ? #444444 : #d0d0d0);
+//                    VerticalBox {
+//                        padding: 10px;
+//                        spacing: 10px;
+//
+//                        Text {
+//                            text: "Навигация";
+//                            font-size: 14px;
+//                            font-weight: bold;
+//                            color: dark-mode ? #aaaaaa : #666666;
+//                        }
+//
+//                        ListView {
+//                            height: 200px;
+//                            model: [
+//                                { text: "📁 Главная страница" },
+//                                { text: "📊 Статистика" },
+//                                { text: "⚙ Настройки" },
+//                                { text: "📁 Документы" },
+//                                { text: "🖼 Изображения" },
+//                                { text: "🎵 Медиа" }
+//                            ];
+//                        }
+//
+//                        GroupBox {
+//                            title: "Фильтры";
+//
+//                            VerticalBox {
+//                                spacing: 5px;
+//
+//                                CheckBox {
+//                                    text: "Только активные";
+//                                }
+//
+//                                CheckBox {
+//                                    text: "С ошибками";
+//                                }
+//
+//                                CheckBox {
+//                                    text: "Завершенные";
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//
+//                // Основной контент
+//                VerticalBox {
+//                    // Вкладки
+//                    TabWidget {
+//                        Tab {
+//                            title: "Главная";
+//
+//                            ScrollView {
+//                                VerticalBox {
+//                                    padding: 20px;
+//                                    spacing: 15px;
+//
+//                                    GroupBox {
+//                                        title: "Основные настройки";
+//
+//                                        VerticalBox {
+//                                            spacing: 10px;
+//
+//                                            HorizontalBox {
+//                                                Text {
+//                                                    text: "Имя:";
+//                                                    width: 100px;
+//
+//                                                    LineEdit {
+//                                                        placeholder-text: "Введите имя";
+//                                                    }
+//
+//                                                    HorizontalBox {
+//                                                        Text {
+//                                                            text: "Email:";
+//                                                            width: 100px;
+//                                                        }
+//
+//                                                        LineEdit {
+//                                                            placeholder-text: "email@example.com";
+//                                                        }
+//                                                    }
+//
+//                                                    HorizontalBox {
+//                                                        Text {
+//                                                            text: "Возраст:";
+//                                                            width: 100px;
+//
+//                                                            SpinBox {
+//                                                                minimum: 0;
+//                                                                maximum: 120;
+//                                                            }
+//                                                        }
+//
+//                                                        HorizontalBox {
+//                                                            Text {
+//                                                                text: "Уровень:";
+//                                                                width: 100px;
+//
+//                                                                Slider {
+//                                                                    minimum: 0;
+//                                                                    maximum: 100;
+//                                                                }
+//                                                            }
+//                                                        }
+//                                                    }
+//
+//                                                    GroupBox {
+//                                                        title: "Дополнительно";
+//
+//                                                        TextEdit {
+//                                                            height: 150px;
+//                                                            placeholder-text: "Введите текст...";
+//                                                        }
+//                                                    }
+//
+//                                                    HorizontalBox {
+//                                                        spacing: 10px;
+//
+//                                                        Button {
+//                                                            text: "Сохранить";
+//                                                            width: 100px;
+//                                                        }
+//
+//                                                        Button {
+//                                                            text: "Отмена";
+//                                                            width: 100px;
+//                                                        }
+//
+//                                                        Button {
+//                                                            text: "Сброс";
+//                                                            width: 100px;
+//                                                        }
+//                                                    }
+//                                                }
+//                                            }
+//                                        }
+//
+//                                        Tab {
+//                                            title: "Статистика";
+//
+//                                            Text {
+//                                                text: "Страница статистики";
+//                                                horizontal-alignment: center;
+//                                                vertical-alignment: center;
+//                                            }
+//                                        }
+//
+//                                        Tab {
+//                                            title: "Настройки";
+//
+//                                            Text {
+//                                                text: "Страница настроек";
+//                                                horizontal-alignment: center;
+//                                                vertical-alignment: center;
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//
+//                            // ========== СТРОКА СОСТОЯНИЯ ==========
+//            Rectangle {
+//                                height: 25px;
+//                                background: dark-mode ? #3c3c3c : #e0e0e0;
+//                                border-top: 1px
+//                                solid(dark-mode
+//                                ? #444444 : #c0c0c0);
+//                visible: statusbar-visible;
+//
+//                                HorizontalBox {
+//                                    padding: 0
+//                                    10px;
+//                    Text {
+//                                        text: "Готово";
+//                                        color: dark-mode ? #aaaaaa : #666666;
+//                                    }
+//
+//                                    HorizontalBox {
+//                                        horizontal-alignment: right;
+//
+//                                        Text {
+//                                            text: "Строка: 1, Колонка: 1";
+//                                            color: dark-mode ? #aaaaaa : #666666;
+//                                        }
+//
+//                                        Rectangle {
+//                                            width: 10px;
+//                                        }
+//
+//                                        Text {
+//                                            text: "UTF-8";
+//                                            color: dark-mode ? #aaaaaa : #666666;
+//                                        }
+//
+//                                        Rectangle {
+//                                            width: 10px;
+//                                        }
+//
+//                                        Text {
+//                                            text: "100%";
+//                                            color: dark-mode ? #aaaaaa : #666666;
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//
+//                        // ========== ВСПЛЫВАЮЩИЕ МЕНЮ ==========
+//        // Меню Файл
+//        PopupMenu file-menu := PopupMenu {
+//                            y: 30px;
+//                            x: 0px;
+//                            visible: false;
+//
+//                            MenuItem {
+//                                text: "Создать\tCtrl+N";
+//                                clicked => {
+//                                    file-new();
+//                                    file-menu.visible = false;
+//                                }
+//                            }
+//
+//                            MenuItem {
+//                                text: "Открыть\tCtrl+O";
+//                                clicked => {
+//                                    file-open();
+//                                    file-menu.visible = false;
+//                                }
+//                            }
+//
+//                            MenuSeparator { }
+//
+//                            MenuItem {
+//                                text: "Сохранить\tCtrl+S";
+//                                clicked => {
+//                                    file-save();
+//                                    file-menu.visible = false;
+//                                }
+//                            }
+//
+//                            MenuItem {
+//                                text: "Сохранить как...\tCtrl+Shift+S";
+//                                clicked => {
+//                                    file-save-as();
+//                                    file-menu.visible = false;
+//                                }
+//                            }
+//
+//                            MenuSeparator { }
+//
+//                            MenuItem {
+//                                text: "Выход\tAlt+F4";
+//                                clicked => {
+//                                    file-exit();
+//                                    file-menu.visible = false;
+//                                }
+//                            }
+//                        }
+//
+//                        // Меню Правка
+//        PopupMenu edit-menu := PopupMenu {
+//                            y: 30px;
+//                            x: 60px;
+//                            visible: false;
+//
+//                            MenuItem {
+//                                text: "Отменить\tCtrl+Z";
+//                                enabled: can-undo;
+//                                clicked => {
+//                                    edit-undo();
+//                                    edit-menu.visible = false;
+//                                }
+//                            }
+//
+//                            MenuItem {
+//                                text: "Повторить\tCtrl+Y";
+//                                enabled: can-redo;
+//                                clicked => {
+//                                    edit-redo();
+//                                    edit-menu.visible = false;
+//                                }
+//                            }
+//
+//                            MenuSeparator { }
+//
+//                            MenuItem {
+//                                text: "Вырезать\tCtrl+X";
+//                                enabled: has-selection;
+//                                clicked => {
+//                                    edit-cut();
+//                                    edit-menu.visible = false;
+//                                }
+//                            }
+//
+//                            MenuItem {
+//                                text: "Копировать\tCtrl+C";
+//                                enabled: has-selection;
+//                                clicked => {
+//                                    edit-copy();
+//                                    edit-menu.visible = false;
+//                                }
+//                            }
+//
+//                            MenuItem {
+//                                text: "Вставить\tCtrl+V";
+//                                clicked => {
+//                                    edit-paste();
+//                                    edit-menu.visible = false;
+//                                }
+//                            }
+//
+//                            MenuSeparator { }
+//
+//                            MenuItem {
+//                                text: "Выделить все\tCtrl+A";
+//                                clicked => {
+//                                    edit-select-all();
+//                                    edit-menu.visible = false;
+//                                }
+//                            }
+//                        }
+//
+//                        // Меню Вид
+//        PopupMenu view-menu := PopupMenu {
+//                            y: 30px;
+//                            x: 130px;
+//                            visible: false;
+//
+//                            MenuItem {
+//                                text: "Темный режим";
+//                                checkable: true;
+//                                checked: dark-mode;
+//                                clicked => {
+//                                    view-dark-mode(!dark-mode);
+//                                    view-menu.visible = false;
+//                                }
+//                            }
+//
+//                            MenuItem {
+//                                text: "Панель инструментов";
+//                                checkable: true;
+//                                checked: toolbar-visible;
+//                                clicked => {
+//                                    view-toolbar(!toolbar-visible);
+//                                    view-menu.visible = false;
+//                                }
+//                            }
+//
+//                            MenuItem {
+//                                text: "Строка состояния";
+//                                checkable: true;
+//                                checked: statusbar-visible;
+//                                clicked => {
+//                                    view-statusbar(!statusbar-visible);
+//                                    view-menu.visible = false;
+//                                }
+//                            }
+//                        }
+//
+//                        // Меню Справка
+//        PopupMenu help-menu := PopupMenu {
+//                            y: 30px;
+//                            x: 190px;
+//                            visible: false;
+//
+//                            MenuItem {
+//                                text: "Документация\tF1";
+//                                clicked => {
+//                                    help-documentation();
+//                                    help-menu.visible = false;
+//                                }
+//                            }
+//
+//                            MenuItem {
+//                                text: "О программе";
+//                                clicked => {
+//                                    help-about();
+//                                    help-menu.visible = false;
+//                                }
+//                            }
+    }
+}
+//
+//                    // Вспомогательные свойства
+//    private property <bool> toolbar-visible: true;
+//                    private property <bool> statusbar-visible: true;
+//                }
+
+                // Компоненты меню
+component MenuItem {
+    in property <string> text;
+    in property <bool> enabled <=> touch.enabled;
+    in property <bool> checkable;
+    in property <bool> checked;
+
+    callback clicked();
+
+    height: 30px;
+    min-width: 200px;
+
+    Rectangle {
+        background: enabled ? (hover ? (root.dark-mode ? #505050 : #e0e0e0) : transparent) : transparent;
+
+        HorizontalBox {
+            padding: 5px;
+            Text {
+                text: root.text;
+                color: root.enabled ? (root.dark-mode ? white : black) : (root.dark-mode ? #666666 : #aaaaaa);
+            }
+
+            HorizontalBox {
+//                horizontal-alignment: right;
+
+                Text {
+                    text: checked ? "✓" : "";
+                    color: dark-mode ? white : black;
+                    visible: checkable;
+                }
+            }
+        }
+
+        touch := TouchArea {
+            clicked => {
+                if (enabled) {
+                    root.clicked();
+                }
+            }
+        }
+    }
+}
+
+component MenuSeparator {
+    height: 1px;
+
+    Rectangle {
+//        background: root.dark-mode ? #444444 : #c0c0c0;
+        height: 1px;
+    }
+}
+
+component PopupMenu {
+    in property <bool> dark-mode;
+//    in property <bool> visible;
+
+    width: 200px;
+//    background: dark-mode ? #3c3c3c : white;
+//    border: 1px;
+//                solid(dark-mode ? #444444 : #c0c0c0);
+//    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+//    z: 100;
+//    z-index: 100;
+}
+
