@@ -1,184 +1,75 @@
-// app.slint
-import {
-    VerticalBox,
-    HorizontalBox,
-    Button,
-    GroupBox,
-    LineEdit,
-    StandardButton,
-} from "std-widgets.slint";
+import { VerticalBox, AboutSlint } from "std-widgets.slint";
+import { Palette, StyleMetrics } from "std-widgets.slint";
+//import { MenuBar, Menu, MenuItem, VerticalLayout } from "std-widgets.slint";
 
-// Определяем структуру для туннеля
-export struct TunnelData {
-    name: string,
-    local_port: int,
-    remote_port: int,
-    running: bool,
-}
+export component AppWin inherits Window {
+    width: 600px;
+    height: 800px;
+    title: "Slint Menu Example";
 
-export component MainWindow inherits Window {
-    in-out property <string> password: "";
+    callback file-new();
+    callback file-open();
+    callback quit();
 
-    // Свойства для передачи данных из Rust
-    in-out property <string> server-ip;
-    in-out property <string> username;
-//    in-out property <string> key-path;
-
-    // Конфигурация туннелей
-    in-out property <[TunnelData]> tunnels: [
-        {
-            name: "Туннель 1",
-            local_port: 60721,
-            remote_port: 60721,
-            running: false,
-        },
-        {
-            name: "HTTPS",
-            local_port: 8443,
-            remote_port: 443,
-            running: true,
-        },
-        {
-            name: "DB",
-            local_port: 5432,
-            remote_port: 5432,
-            running: false,
-        },
-    ];
-
-    // Callbacks для взаимодействия с Rust
-    callback start_tunnel(int);
-    callback stop_tunnel(int);
-//    callback reload_config();
-//    callback save_config();
-
-    // Свойства для отображения
-//    private property <int> total_tunnels: root.tunnels.length;
-//    in property <int> running_tunnels;
-
-    title: "SSH Tunnel Manager";
-    min-width: 600px;
-    min-height: 800px;
-    default-font-family: "Segoe UI";
-//    default-font-size: 14px;
-
-    VerticalBox {
-        alignment: LayoutAlignment.stretch;
-        spacing: 0px;
-
-        // Пароль
-        VerticalBox {
-            Text {
-                overflow: TextOverflow.clip;
-                text: "Пароль к ключу:";
-                vertical-alignment: center;
-                horizontal-alignment: left;
-            }
-
-            LineEdit {
-                placeholder-text: "Введите пароль от приватного ключа";
-                text <=> root.password;
-                input-type: InputType.password;
-            }
-        }
-
-        Rectangle { // Разделитель
-            border-color: #000000;
-            border-width: 1px;
-            height: 1px;
-        }
-
-        // ===== Общая информация =====
-//        HorizontalBox {
-//            Text {
-//                text: "Server IP: " + root.server_ip;
-//            }
-//
-//            Text {
-//                text: "Username: " + root.username;
-//            }
-//        }
-
-//        Rectangle { // Разделитель
-//            border-color: #000000;
-//            border-width: 1px;
-//            height: 1px;
-//        }
-
-        // Секция Туннелей
-        VerticalBox {
-            spacing: 0px;
-            alignment: LayoutAlignment.start;
-
-            // ===== Заголовок таблицы =====
-            for tunnel[index] in root.tunnels: GroupBox {
-//                title: tunnel.name;
-
-                Rectangle {
-                    border-color: #000000;
-                    border-width: 1px;
-                    border-radius: 12px;
-
-                    VerticalBox {
-                        // 🔹 кастомный заголовок
-                            padding-left: 15px;
-                        Text {
-                            text: tunnel.name;
-                        }
-
-                        HorizontalBox {
-                            Text {
-                                text: tunnel.running ? "🟢 Активен" : "🔴 Отключён";
-                                color: tunnel.running ? green : red;
-                                vertical-alignment: center;
-                                width: 100px;
-                            }
-
-                            Text {
-                                text: tunnel.local_port;
-                                vertical-alignment: center;
-                                width: 100px;
-                            }
-
-                            Text {
-                                text: tunnel.remote_port;
-                                vertical-alignment: center;
-                                width: 100px;
-                            }
-
-                            Button {
-                                text: "Запустить";
-                                width: 100px;
-                                clicked => {
-                                    root.start_tunnel(index);
-                                }
-                            }
-
-                            Button {
-                                text: "Остановить";
-                                width: 100px;
-                                enabled: false;
-                                clicked => {
-                                    root.stop_tunnel(index);
-                                }
-                            }
-                        }
-                    }
+    MenuBar {
+        Menu {
+            title: @tr("File");
+            MenuItem {
+                title: @tr("New");
+                activated => {
+                    file-new();
                 }
             }
 
-            Rectangle { // Разделитель
-                border-color: #000000;
-                border-width: 1px;
-                height: 1px;
+            MenuItem {
+                title: @tr("Open");
+                activated => {
+                    file-open();
+                }
+            }
+        }
+
+        Menu {
+            title: @tr("Edit");
+            MenuItem {
+                title: @tr("Copy");
             }
 
-//            HorizontalBox {
-//                alignment: LayoutAlignment.end;
-//                StandardButton {
-//                    kind: close;
-//                }
-//            }
+            MenuItem {
+                title: @tr("Paste");
+            }
+
+            MenuSeparator { }
+
+            Menu {
+                title: @tr("Find");
+                MenuItem {
+                    title: @tr("Find in document...");
+                }
+
+                MenuItem {
+                    title: @tr("Find Next");
+                }
+
+                MenuItem {
+                    title: @tr("Find Previous");
+                }
+            }
+        }
+
+        Menu {
+            title: @tr("About");
+//             AboutSlint {};
         }
     }
+
+    VerticalBox {
+        padding: 20px;
+
+        Rectangle {
+            background: #b9bec4;
+            border-width: 4px;
+        }
+    }
+//    AboutSlint {}
 }

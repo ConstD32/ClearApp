@@ -5,6 +5,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+#slint = { version = "1.14", features = ["backend-qt", "renderer-skia"] }
 slint = { version = "1.14", features = ["backend-winit", "renderer-skia"] }
 
 [build-dependencies]
