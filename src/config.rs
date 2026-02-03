@@ -1,20 +1,15 @@
-use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::Path;
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct AppConfig {
-    pub server_ip: String,
-    pub username: String,
-    pub key_path: String,
-    pub buffer_size: usize,
-    pub tunnels: Vec<TunnelConfig>,
+    pub folders: Vec<ConfigFolders>,
 }
 #[derive(Serialize, Deserialize, Clone, Debug)]
-pub struct TunnelConfig {
+pub struct ConfigFolders {
     pub name: String,
-    pub local_port: u16,
-    pub remote_port: u16,
+    pub path: String,
 }
 
 
