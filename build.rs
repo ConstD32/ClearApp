@@ -5,9 +5,6 @@ use std::fs;
 use std::path::Path;
 
 fn main() {
-    // let config =
-    //     slint_build::CompilerConfiguration::new()
-    //         .with_style("fluent-dark".into());
     slint_build::compile("ui/app.slint").unwrap();
     // slint_build::compile("ui/classic_window.slint").unwrap();
     // slint_build::compile("ui/learn.slint").unwrap();

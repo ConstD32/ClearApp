@@ -1,77 +1,54 @@
 // app.slint
 
-import { VerticalBox, AboutSlint } from "std-widgets.slint";
-//import { Palette, StyleMetrics } from "std-widgets.slint";
-//import { MenuBar, Menu, MenuItem, VerticalLayout } from "std-widgets.slint";
+import {
+    Button,
+    VerticalBox,
+    ListView,
+    HorizontalBox,
+} from "std-widgets.slint";
+
+// Определяем структуру для туннеля
+export struct FolderItem {
+    name: string,
+    path: string,
+}
 
 export component AppWin inherits Window {
-    width: 600px;
-    height: 800px;
-    title: "Очистка папок";
+    in-out property <[FolderItem]> folders;
+
+    callback clear_folder(int);
 
     callback file-new();
     callback file-open();
     callback quit();
 
-    MenuBar {
-        Menu {
-            title: @tr("File");
-            MenuItem {
-                title: @tr("New");
-                activated => {
-                    file-new();
-                }
-            }
+//    width: 600px;
+//    height: 800px;
+    min-width: 600px;
+    min-height: 400px;
 
-            MenuItem {
-                title: @tr("Open");
-                activated => {
-                    file-open();
-                }
-            }
-        }
-
-        Menu {
-            title: @tr("Edit");
-            MenuItem {
-                title: @tr("Copy");
-            }
-
-            MenuItem {
-                title: @tr("Paste");
-            }
-
-            MenuSeparator { }
-
-            Menu {
-                title: @tr("Find");
-                MenuItem {
-                    title: @tr("Find in document...");
-                }
-
-                MenuItem {
-                    title: @tr("Find Next");
-                }
-
-                MenuItem {
-                    title: @tr("Find Previous");
-                }
-            }
-        }
-
-        Menu {
-            title: @tr("About");
-//             AboutSlint {};
-        }
-    }
+    title: "Очистка папок";
 
     VerticalBox {
-        padding: 20px;
+        ListView {
+            for folder[i] in folders: HorizontalBox {
+                Text {
+                    text: folder.name;
+                    vertical-alignment: center;
+                }
 
-        Rectangle {
-            background: #b9bec4;
-            border-width: 4px;
+                Text {
+                    text: folder.path;
+                    vertical-alignment: center;
+                }
+
+                Button {
+                    text: "Очистить";
+                    clicked => {
+                        clear_folder(i);
+                    }
+                }
+            }
         }
     }
-//    AboutSlint {}
 }
