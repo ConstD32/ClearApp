@@ -2,6 +2,8 @@
 
 mod config;
 mod logger;
+mod model;
+mod services;
 
 slint::include_modules!();
 use slint::{ModelRc, VecModel};
