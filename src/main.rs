@@ -153,9 +153,9 @@ fn is_dangerous(path: &Path) -> bool {
 
 fn update() {
     let status = self_update::backends::github::Update::configure()
-        .repo_owner("Konstantin")
-        .repo_name("REPO")
-        .bin_name("clear_app")
+        .repo_owner("ConstD32")
+        .repo_name("ClearApp")
+        .bin_name("ClearApp")
         .show_download_progress(true)
         .current_version(env!("CARGO_PKG_VERSION"))
         .build()

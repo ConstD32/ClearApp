@@ -1,9 +1,11 @@
 #Cargo.toml
-
 [package]
 name = "ClearApp"
 version = "0.1.0"
 edition = "2024"
+description = "Clear folder GUI"
+license = "MIT"
+repository = "https://github.com/ConstD32/ClearApp"
 
 [dependencies]
 slint = { version = "1.15", features = ["backend-winit", "renderer-skia"] }
@@ -16,3 +18,24 @@ self_update = "0.42"
 
 [build-dependencies]
 slint-build = "1.15"
+
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = "z"
+strip = true
+
+# cargo-dist читает это
+[package.metadata.dist]
+dist = true
+
+# какие таргеты собираем
+targets = ["x86_64-pc-windows-msvc"]
+
+# какие установщики делать
+installers = ["msi"]
+
+# включить автообновление
+auto-includes = true
+
+[package.metadata.bundle]
