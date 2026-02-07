@@ -74,21 +74,6 @@ fn main() -> Result<(), slint::PlatformError> {
             if let Err(e) = clean_folder(&path) {
                 eprintln!("Ошибка очистки: {}", e);
             }
-
-            // let folder = ConfigFolders {
-            //     name: cfg.folders.clone(),
-            //     path: cfg.folders.clone(),
-            // };
-
-            // match folder.clear() {
-            //     Ok(handle) => {
-            //         manager.tunnels.lock().unwrap().insert(index as usize, handle);
-            //         println!("Туннель {} запущен", tunnel_cfg.name);
-            //     }
-            //     Err(e) => {
-            //         eprintln!("Ошибка запуска туннеля: {e}");
-            //     }
-            // }
         }
     });
 
@@ -102,6 +87,11 @@ fn main() -> Result<(), slint::PlatformError> {
 
     ui.on_quit(|| {
         std::process::exit(0);
+    });
+
+    ui.on_update(|| {
+        update();
+        println!("Обновление");
     });
 
     ui.run()
@@ -160,3 +150,20 @@ pub fn clean_folder(path: &Path) -> io::Result<()> {
 fn is_dangerous(path: &Path) -> bool {
     path.parent().is_none() // C:\ или /
 }
+
+fn update() {
+    let status = self_update::backends::github::Update::configure()
+        .repo_owner("Konstantin")
+        .repo_name("REPO")
+        .bin_name("clear_app")
+        .show_download_progress(true)
+        .current_version(env!("CARGO_PKG_VERSION"))
+        .build()
+        .unwrap()
+        .update();
+
+    if let Ok(s) = status {
+        println!("Updated to {}", s.version());
+    }
+}
+
