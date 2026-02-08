@@ -1,5 +1,8 @@
 name: Release Build
 
+permissions:
+  contents: write
+
 on:
   push:
     tags:
@@ -71,3 +74,16 @@ jobs:
           $zip="${{ steps.pkg.outputs.name }}-${{ steps.target2.outputs.triple }}.zip"
           
           @"
+          
+          version: $ver
+          path: $zip
+          sha256: ${{ steps.hash.outputs.sha }}
+          size: ${{ steps.hash.outputs.size }}
+          "@ | Out-File latest.yml -Encoding utf8
+
+      - name: Upload release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            *.zip
+            latest.yml
