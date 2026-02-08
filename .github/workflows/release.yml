@@ -1,4 +1,4 @@
-name: build-release
+name: Release Build
 
 on:
   push:
@@ -6,18 +6,67 @@ on:
       - "v*"
 
 jobs:
+
   build:
     runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
 
-      - run: cargo build --release
+      - name: Build release
+        run: cargo build --release
 
-      - uses: softprops/action-gh-release@v1
-        with:
-          files: target/release/myapp.exe
+      - name: Detect package name
+        id: pkg
+        shell: powershell
+        run: |
+          $name = (Select-String -Path Cargo.toml -Pattern '^name\s*=\s*"(.*)"').Matches[0].Groups[1].Value
+          echo "name=$name" >> $env:GITHUB_OUTPUT
+
+      - name: Get target triple
+        id: target
+        run: "rustc -vV | findstr host:"
+        shell: cmd
+
+      - name: Parse target
+        id: target2
+        shell: powershell
+        run: |
+          $t = rustc -vV | Select-String host | % { $_.ToString().Split()[1] }
+          echo "triple=$t" >> $env:GITHUB_OUTPUT
+
+      # ---------------- ZIP ----------------
+
+      - name: Create update zip
+        shell: powershell
+        run: |
+          mkdir dist
+          copy target\release\${{ steps.pkg.outputs.name }}.exe dist\
+          Compress-Archive -Path dist\${{ steps.pkg.outputs.name }}.exe `
+            -DestinationPath `
+            ${{ steps.pkg.outputs.name }}-${{ steps.target2.outputs.triple }}.zip
+
+      # ---------------- HASH ----------------
+
+      - name: SHA256
+        id: hash
+        shell: powershell
+        run: |
+          $f="${{ steps.pkg.outputs.name }}-${{ steps.target2.outputs.triple }}.zip"
+          $h=(Get-FileHash $f -Algorithm SHA256).Hash.ToLower()
+          $s=(Get-Item $f).Length
+          echo "sha=$h" >> $env:GITHUB_OUTPUT
+          echo "size=$s" >> $env:GITHUB_OUTPUT
+
+      # ---------------- YAML ----------------
+
+      - name: Generate latest.yml
+        shell: powershell
+        run: |
+          $ver="${GITHUB_REF_NAME}".TrimStart("v")
+          $zip="${{ steps.pkg.outputs.name }}-${{ steps.target2.outputs.triple }}.zip"
+          
+          @"
