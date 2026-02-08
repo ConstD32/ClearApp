@@ -2,7 +2,7 @@ name: Tag from Cargo version
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
 
 permissions:
   contents: write
