@@ -97,7 +97,7 @@ jobs:
           path: $zip
           sha256: ${{ steps.hash.outputs.sha }}
           size: ${{ steps.hash.outputs.size }}
-            "@ | Out-File latest.yml -Encoding utf8
+          "@ | Out-File latest.yml -Encoding utf8
 
       # ---------------- RELEASE ----------------
 
