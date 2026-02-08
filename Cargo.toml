@@ -1,7 +1,7 @@
 #Cargo.toml
 [package]
 name = "ClearApp"
-version = "0.0.3"
+version = "0.0.4"
 edition = "2024"
 description = "Clear folder GUI"
 license = "MIT"

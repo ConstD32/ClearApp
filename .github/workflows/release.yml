@@ -1,27 +1,36 @@
 name: Release Build
 
-permissions:
-  contents: write
-
 on:
   push:
     tags:
       - "v*"
   workflow_dispatch:
 
-jobs:
+permissions:
+  contents: write
 
+jobs:
   build:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v4
+
+      # ---------------- CHECKOUT ----------------
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ---------------- RUST ----------------
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
+      # ---------------- BUILD ----------------
+
       - name: Build release
         run: cargo build --release
+
+      # ---------------- PACKAGE NAME ----------------
 
       - name: Detect package name
         id: pkg
@@ -30,13 +39,10 @@ jobs:
           $name = (Select-String -Path Cargo.toml -Pattern '^name\s*=\s*"(.*)"').Matches[0].Groups[1].Value
           echo "name=$name" >> $env:GITHUB_OUTPUT
 
-      - name: Get target triple
-        id: target
-        run: "rustc -vV | findstr host:"
-        shell: cmd
+      # ---------------- TARGET TRIPLE ----------------
 
-      - name: Parse target
-        id: target2
+      - name: Detect target triple
+        id: target
         shell: powershell
         run: |
           $t = rustc -vV | Select-String host | % { $_.ToString().Split()[1] }
@@ -49,41 +55,57 @@ jobs:
         run: |
           mkdir dist
           copy target\release\${{ steps.pkg.outputs.name }}.exe dist\
-          Compress-Archive -Path dist\${{ steps.pkg.outputs.name }}.exe `
+          Compress-Archive `
+            -Path dist\${{ steps.pkg.outputs.name }}.exe `
             -DestinationPath `
-            ${{ steps.pkg.outputs.name }}-${{ steps.target2.outputs.triple }}.zip
+            ${{ steps.pkg.outputs.name }}-${{ steps.target.outputs.triple }}.zip
 
       # ---------------- HASH ----------------
 
-      - name: SHA256
+      - name: Compute SHA256
         id: hash
         shell: powershell
         run: |
-          $f="${{ steps.pkg.outputs.name }}-${{ steps.target2.outputs.triple }}.zip"
+          $f="${{ steps.pkg.outputs.name }}-${{ steps.target.outputs.triple }}.zip"
           $h=(Get-FileHash $f -Algorithm SHA256).Hash.ToLower()
           $s=(Get-Item $f).Length
           echo "sha=$h" >> $env:GITHUB_OUTPUT
           echo "size=$s" >> $env:GITHUB_OUTPUT
 
-      # ---------------- YAML ----------------
+      # ---------------- VERSION ----------------
+
+      - name: Detect version
+        id: ver
+        shell: powershell
+        run: |
+          if ("${{ github.ref_type }}" -eq "tag") {
+            $v = "${{ github.ref_name }}".TrimStart("v")
+          } else {
+            $v = (Select-String -Path Cargo.toml -Pattern '^version\s*=\s*"(.*)"').Matches[0].Groups[1].Value
+          }
+          echo "version=$v" >> $env:GITHUB_OUTPUT
+
+      # ---------------- latest.yml ----------------
 
       - name: Generate latest.yml
         shell: powershell
         run: |
-          $ver="${GITHUB_REF_NAME}".TrimStart("v")
-          $zip="${{ steps.pkg.outputs.name }}-${{ steps.target2.outputs.triple }}.zip"
-          
+          $zip="${{ steps.pkg.outputs.name }}-${{ steps.target.outputs.triple }}.zip"
+
           @"
-          
-          version: $ver
+          version: ${{ steps.ver.outputs.version }}
           path: $zip
           sha256: ${{ steps.hash.outputs.sha }}
           size: ${{ steps.hash.outputs.size }}
-          "@ | Out-File latest.yml -Encoding utf8
+            "@ | Out-File latest.yml -Encoding utf8
 
-      - name: Upload release
+      # ---------------- RELEASE ----------------
+
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
             *.zip
             latest.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
