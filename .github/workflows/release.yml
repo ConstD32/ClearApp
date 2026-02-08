@@ -1,9 +1,9 @@
-name: Release
+name: build-release
 
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 jobs:
   build:
@@ -12,13 +12,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-
-      - name: Build
-        run: cargo build --release
-
-      - name: Upload Release
-        uses: softprops/action-gh-release@v2
+      - uses: actions-rs/toolchain@v1
         with:
-          files: target/release/your_app.exe
+          toolchain: stable
+
+      - run: cargo build --release
+
+      - uses: softprops/action-gh-release@v1
+        with:
+          files: target/release/myapp.exe

@@ -1,12 +1,11 @@
 // main.rs
-
 mod config;
 mod logger;
 mod model;
 mod services;
 
 slint::include_modules!();
-use slint::{ModelRc, VecModel};
+use slint::{ModelRc, SharedString, VecModel};
 
 use crate::config::AppConfig;
 use crate::logger::{log_message, setup_panic_hook};
@@ -20,8 +19,16 @@ fn main() -> Result<(), slint::PlatformError> {
     setup_panic_hook();
     log_message("Запуск Clear folders...");
 
+    let logs_model = Rc::new(VecModel::<SharedString>::default());
+
     let ui = AppWin::new()?;
     // let ui_weak = ui.as_weak();
+
+    ui.set_logs(ModelRc::from(logs_model.clone()));
+
+    // добавление логов
+    logs_model.push("Старт приложения".into());
+    logs_model.push("Инициализация GUI".into());
 
     // Загрузка конфигурации
     let config = AppConfig::load_from_file("config.json").unwrap_or_else(|e| {
@@ -94,6 +101,19 @@ fn main() -> Result<(), slint::PlatformError> {
         println!("Обновление");
     });
 
+    // let about = AboutDialog::new().unwrap();
+    ui.set_app_name(env!("CARGO_PKG_NAME").into());
+    ui.set_version(env!("CARGO_PKG_VERSION").into());
+
+    ui.on_show_about({
+        let about = ui.as_weak();
+        move || {
+            if let Some(a) = about.upgrade() {
+                a.show().unwrap();
+            }
+        }
+    });
+
     ui.run()
 }
 
@@ -152,6 +172,7 @@ fn is_dangerous(path: &Path) -> bool {
 }
 
 fn update() {
+    // println!("Обновляем");
     let status = self_update::backends::github::Update::configure()
         .repo_owner("ConstD32")
         .repo_name("ClearApp")
@@ -162,8 +183,8 @@ fn update() {
         .unwrap()
         .update();
 
+    // println!("Обновляем уже {:#?}", status);
     if let Ok(s) = status {
         println!("Updated to {}", s.version());
     }
 }
-

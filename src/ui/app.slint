@@ -1,5 +1,4 @@
 // app.slint
-
 import {
     Button,
     VerticalBox,
@@ -7,14 +6,17 @@ import {
     HorizontalBox,
 } from "std-widgets.slint";
 
-// Определяем структуру для туннеля
+// Определяем структуру для папок
 export struct FolderItem {
     name: string,
     path: string,
 }
 
 export component AppWin inherits Window {
+    in property <string> app-name;
+    in property <string> version;
     in-out property <[FolderItem]> folders;
+    in property <[string]> logs;
 
     callback clear_folder(int);
 
@@ -22,6 +24,7 @@ export component AppWin inherits Window {
     callback file-open();
     callback quit();
     callback update();
+    callback show-about();
 
     //    width: 600px;
 //    height: 800px;
@@ -79,6 +82,11 @@ export component AppWin inherits Window {
         Menu {
             title: @tr("О программе...");
             MenuItem {
+                title: @tr("Версия: ") + root.version;
+//                text: "Версия: " + version;
+            }
+
+            MenuItem {
                 title: @tr("Обновить");
                 activated => {
                     update();
@@ -87,24 +95,43 @@ export component AppWin inherits Window {
         }
     }
 
-    VerticalBox {
-        ListView {
-            for folder[i] in folders: HorizontalBox {
-                Text {
-                    text: folder.name;
-                    vertical-alignment: center;
-                }
-
-                Text {
-                    text: folder.path;
-                    vertical-alignment: center;
-                }
-
-                Button {
-                    text: "Очистить";
-                    clicked => {
-                        clear_folder(i);
+    Rectangle {
+        VerticalBox {
+            ListView {
+                min-height: 80px;
+//                max-height: 250px;
+                for folder[i] in folders: HorizontalBox {
+                    Text {
+                        text: folder.name;
+                        vertical-alignment: center;
                     }
+
+                    Text {
+                        text: folder.path;
+                        vertical-alignment: center;
+                    }
+
+                    Button {
+                        text: "Очистить";
+                        clicked => {
+                            clear_folder(i);
+                        }
+                    }
+                }
+            }
+
+            //        Rectangle {
+//            height: 2px;
+//            background: gray;
+//        }
+
+            ListView {
+                min-height: 250px;
+//                width: parent.width;
+//                height: parent.height;
+                for log in logs: Text {
+                    text: log;
+                    wrap: word-wrap;
                 }
             }
         }
