@@ -34,50 +34,52 @@ export component AppWin inherits Window {
     title: "Очистка папок";
 
     MenuBar {
-        Menu {
-            title: @tr("Список");
-            MenuItem {
-                title: @tr("Новый список");
-                activated => {
-                    file-new();
-                }
-            }
+//region
+//        Menu {
+//            title: @tr("Список");
+//            MenuItem {
+//                title: @tr("Новый список");
+//                activated => {
+//                    file-new();
+//                }
+//            }
+//
+//            MenuItem {
+//                title: @tr("Open");
+//                activated => {
+//                    file-open();
+//                }
+//            }
+//        }
 
-            MenuItem {
-                title: @tr("Open");
-                activated => {
-                    file-open();
-                }
-            }
-        }
-
-        Menu {
-            title: @tr("Edit");
-            MenuItem {
-                title: @tr("Copy");
-            }
-
-            MenuItem {
-                title: @tr("Paste");
-            }
-
-            MenuSeparator { }
-
-            Menu {
-                title: @tr("Find");
-                MenuItem {
-                    title: @tr("Find in document...");
-                }
-
-                MenuItem {
-                    title: @tr("Find Next");
-                }
-
-                MenuItem {
-                    title: @tr("Find Previous");
-                }
-            }
-        }
+//        Menu {
+//            title: @tr("Edit");
+//            MenuItem {
+//                title: @tr("Copy");
+//            }
+//
+//            MenuItem {
+//                title: @tr("Paste");
+//            }
+//
+//            MenuSeparator { }
+//
+//            Menu {
+//                title: @tr("Find");
+//                MenuItem {
+//                    title: @tr("Find in document...");
+//                }
+//
+//                MenuItem {
+//                    title: @tr("Find Next");
+//                }
+//
+//                MenuItem {
+//                    title: @tr("Find Previous");
+//                }
+//            }
+//        }
+//endregion
 
         Menu {
             title: @tr("О программе...");
