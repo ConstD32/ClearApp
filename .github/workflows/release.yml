@@ -92,20 +92,18 @@ jobs:
         run: |
           $zip="${{ steps.pkg.outputs.name }}-${{ steps.target.outputs.triple }}.zip"
 
-          @"
-          version: ${{ steps.ver.outputs.version }}
-          path: $zip
-          sha256: ${{ steps.hash.outputs.sha }}
-          size: ${{ steps.hash.outputs.size }}
-          "@ | Out-File latest.yml -Encoding utf8
+          "version: ${{ steps.ver.outputs.version }}" | Out-File latest.yml -Encoding utf8
+          "path: $zip" | Out-File latest.yml -Append -Encoding utf8
+          "sha256: ${{ steps.hash.outputs.sha }}" | Out-File latest.yml -Append -Encoding utf8
+          "size: ${{ steps.hash.outputs.size }}" | Out-File latest.yml -Append -Encoding utf8
 
       # ---------------- RELEASE ----------------
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: v${{ steps.ver.outputs.version }}
+          name: v${{ steps.ver.outputs.version }}
           files: |
             *.zip
             latest.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
