@@ -1,9 +1,12 @@
-// ui.rc
+// build.rc
+
+slint::include_modules!();
+
 use slint::{ModelRc, SharedString, VecModel};
 use std::path::PathBuf;
 use std::rc::Rc;
 
-use crate::config::AppConfig;
+use crate::config::app_config::AppConfig;
 
 pub struct UiContext {
     pub ui: AppWin,
