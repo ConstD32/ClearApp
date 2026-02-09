@@ -13,7 +13,7 @@ pub fn log_message(msg: &str) {
     if let Ok(mut file) = fs::OpenOptions::new()
         .create(true)
         .append(true)
-        .open(format!("ssh_tunnel_{}.log", Local::now().format("%Y-%m-%d")))
+        .open(format!("Clean_folder_{}.log", Local::now().format("%Y-%m-%d")))
     {
         let _ = writeln!(file, "{}", log_msg);
     }
@@ -29,7 +29,7 @@ pub fn setup_panic_hook() {
         if let Ok(mut file) = fs::OpenOptions::new()
             .create(true)
             .append(true)
-            .open(format!("ssh_tunnel_error_{}.log", Local::now().format("%Y-%m-%d")))
+            .open(format!("Clean_folder_error_{}.log", Local::now().format("%Y-%m-%d")))
         {
             let _ = writeln!(file, "{}", msg);
         }

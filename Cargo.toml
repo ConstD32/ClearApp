@@ -1,4 +1,3 @@
-#Cargo.toml
 [package]
 name = "ClearApp"
 version = "0.0.5"
@@ -18,8 +17,19 @@ self_update = { version = "0.42", features = ["archive-zip", "compression-zip-de
 [build-dependencies]
 slint-build = "1.15"
 
+[profile.dev]
+opt-level = 0
+debug = true
+incremental = true
+debug-assertions = true
+overflow-checks = true
+lto = false
+codegen-units = 256
+panic = "unwind"
+
 [profile.release]
 lto = true
 codegen-units = 1
 opt-level = "z"
 strip = true
+panic = "abort"

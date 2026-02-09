@@ -1,13 +1,10 @@
-// build.rs
-
+// ui
 use std::env;
 use std::fs;
 use std::path::Path;
 
 fn main() {
-    slint_build::compile("src/ui/app.slint").unwrap();
-    // slint_build::compile("ui/classic_window.slint").unwrap();
-    // slint_build::compile("ui/learn.slint").unwrap();
+    slint_build::compile("ui/app.slint").unwrap();
 
     // Код ниже копирует файл конфигурации **********************************************
     // region

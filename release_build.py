@@ -3,7 +3,7 @@ from pathlib import Path
 from zipfile import ZipFile, ZIP_DEFLATED
 import tomllib
 
-# build release
+# ui release
 subprocess.check_call(["cargo", "build", "--release"])
 
 # read Cargo.toml

@@ -1,16 +1,15 @@
-// main.rs
-#![windows_subsystem = "windows"]
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod config;
-mod logger;
-mod model;
+mod domain;
 mod services;
+mod ui;
 
 slint::include_modules!();
 use slint::{ModelRc, SharedString, VecModel};
 
 use crate::config::AppConfig;
-use crate::logger::{log_message, setup_panic_hook};
+use services::logger::{log_message, setup_panic_hook};
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
 
