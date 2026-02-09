@@ -1,4 +1,6 @@
 // main.rs
+#![windows_subsystem = "windows"]
+
 mod config;
 mod logger;
 mod model;
