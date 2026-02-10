@@ -3,6 +3,7 @@ import {
     VerticalBox,
     ListView,
     HorizontalBox,
+    StandardButton,
 } from "std-widgets.slint";
 
 // Определяем структуру для папок
@@ -12,83 +13,48 @@ export struct FolderItem {
 }
 
 export component AppWin inherits Window {
+    in-out property <[FolderItem]> folders: [
+        { name: "Disk C:/Temp", path: "C:/Temp" },
+        { name: "Disk D:/Temp", path: "D:/Temp" },
+        { name: "Disk E:/Temp", path: "E:/Temp" }
+    ];
     in property <string> app-name;
     in property <string> version;
-    in-out property <[FolderItem]> folders;
-    in property <[string]> logs;
+    in property <[string]> logs: ["Строка 1", "Строка 2", "Строка 3", "Строка 4"];
 
     callback clear_folder(int);
 
-    callback file-new();
-    callback file-open();
-    callback quit();
+    callback folder-new();
     callback update();
-    callback show-about();
+    callback quit();
 
-    //    width: 600px;
-//    height: 800px;
     min-width: 600px;
-    min-height: 400px;
+    min-height: 780px;
 
     title: "Очистка папок";
 
     MenuBar {
-//region
-//        Menu {
-//            title: @tr("Список");
-//            MenuItem {
-//                title: @tr("Новый список");
-//                activated => {
-//                    file-new();
-//                }
-//            }
-//
-//            MenuItem {
-//                title: @tr("Open");
-//                activated => {
-//                    file-open();
-//                }
-//            }
-//        }
+        Menu {
+            title: @tr("Файл");
+            MenuItem {
+                title: @tr("Новая папка");
+                activated => {
+                    folder-new();
+                }
+            }
 
-//        Menu {
-//            title: @tr("Edit");
-//            MenuItem {
-//                title: @tr("Copy");
-//            }
-//
-//            MenuItem {
-//                title: @tr("Paste");
-//            }
-//
-//            MenuSeparator { }
-//
-//            Menu {
-//                title: @tr("Find");
-//                MenuItem {
-//                    title: @tr("Find in document...");
-//                }
-//
-//                MenuItem {
-//                    title: @tr("Find Next");
-//                }
-//
-//                MenuItem {
-//                    title: @tr("Find Previous");
-//                }
-//            }
-//        }
-//endregion
+            MenuItem {
+                title: @tr("Выход");
+                activated => {
+                    quit();
+                }
+            }
+        }
 
         Menu {
             title: @tr("О программе...");
             MenuItem {
                 title: @tr("Версия: ") + root.version;
-//                text: "Версия: " + version;
-            }
-
-            MenuItem {
-                title: @tr("Обновить");
                 activated => {
                     update();
                 }
@@ -98,9 +64,9 @@ export component AppWin inherits Window {
 
     Rectangle {
         VerticalBox {
+            padding: 10px;
             ListView {
-                min-height: 80px;
-//                max-height: 250px;
+                max-height: 144px;
                 for folder[i] in folders: HorizontalBox {
                     Text {
                         text: folder.name;
@@ -121,18 +87,26 @@ export component AppWin inherits Window {
                 }
             }
 
-            //        Rectangle {
-//            height: 2px;
-//            background: gray;
-//        }
+            Rectangle {
+                height: 2px;
+                background: gray;
+            }
 
             ListView {
-                min-height: 250px;
-//                width: parent.width;
-//                height: parent.height;
                 for log in logs: Text {
+                    x: 0px;
                     text: log;
                     wrap: word-wrap;
+                }
+            }
+
+            HorizontalBox {
+                alignment: end;
+                StandardButton {
+                    kind: close;
+                    clicked() => {
+                        quit();
+                    }
                 }
             }
         }

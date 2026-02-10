@@ -6,7 +6,10 @@ use slint::{ModelRc, SharedString, VecModel};
 use std::path::PathBuf;
 use std::rc::Rc;
 
-use crate::config::app_config::AppConfig;
+use crate::config::app_config::{AppConfig, update};
+use crate::services::logging;
+use crate::services::logging::log_message;
+use crate::services::cleaner::clean_folder;
 
 pub struct UiContext {
     pub ui: AppWin,
@@ -14,22 +17,13 @@ pub struct UiContext {
 }
 
 pub fn build_ui(config: AppConfig) -> Result<UiContext, slint::PlatformError> {
-    let logs_model = Rc::new(VecModel::<SharedString>::default());
-
     let ui = AppWin::new()?;
-    ui.set_logs(ModelRc::from(logs_model.clone()));
-
-    logs_model.push("Старт приложения".into());
-    logs_model.push("Инициализация GUI".into());
 
     // folders -> model
     let folders: Vec<FolderItem> = config
         .folders
         .iter()
-        .map(|t| FolderItem {
-            name: t.name.clone().into(),
-            path: t.path.clone().into(),
-        })
+        .map(|t| FolderItem { name: t.name.clone().into(), path: t.path.clone().into() })
         .collect();
 
     let model = Rc::new(VecModel::from(folders));
@@ -41,6 +35,13 @@ pub fn build_ui(config: AppConfig) -> Result<UiContext, slint::PlatformError> {
     // meta
     ui.set_app_name(env!("CARGO_PKG_NAME").into());
     ui.set_version(env!("CARGO_PKG_VERSION").into());
+
+    let logs_model = Rc::new(VecModel::<SharedString>::default());
+    ui.set_logs(ModelRc::from(logs_model.clone()));
+    logging::init_ui_logger(logs_model.clone());
+
+    logs_model.push("Старт приложения".into());
+    logs_model.push("Инициализация GUI".into());
 
     Ok(UiContext { ui, logs_model })
 }
@@ -55,17 +56,18 @@ fn bind_callbacks(ui: &AppWin, config: AppConfig) {
         let path = PathBuf::from(&folder.path);
 
         if let Err(e) = clean_folder(&path) {
-            eprintln!("Ошибка очистки: {}", e);
+            let msg = format!("Ошибка очистки: {}", e);
+            log_message(&msg);
         }
     });
 
-    ui.on_file_new(|| println!("New file"));
-    ui.on_file_open(|| println!("Open file"));
-    ui.on_quit(|| std::process::exit(0));
+    ui.on_folder_new(|| {
+        log_message("Новая папка");
+    });
 
     ui.on_update(|| {
+        log_message("Обновление");
         update();
-        println!("Обновление");
     });
 
     // ui.on_show_about({
@@ -76,4 +78,6 @@ fn bind_callbacks(ui: &AppWin, config: AppConfig) {
     //         }
     //     }
     // });
+
+    ui.on_quit(|| std::process::exit(0));
 }
